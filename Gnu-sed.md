@@ -1,6 +1,6 @@
 ## GNU SED
 
-Sed is a stream editor. Multiple files would be regarded as one stream.
+Sed is a stream editor. By default, multiple files would be regarded as one stream.
 
 ```
 Syntex:
@@ -8,19 +8,19 @@ Syntex:
     sed OPTION SCRIPT INPUTFILE...
 ```
 
-By default, sed displays all lines of contents with the processed lines following the original lines separately from input to the standard output, except with the -d option to be modified or deleted.
+By default, sed will displays all lines from input with the specified lines following the original lines repectively to the standard output, except with the -d option to be modified or deleted.
 
 ```
+ 
 sed -n 's/hello/world/' input.txt
                         < input.txt
                                     >output.txt
-[echo 8 |] sed -n ...                                   
+sed -n ...                                   
 
-
-    options
-
-	'[RANGE] [INSTRUCTION] [/PATTERN/] [REPLACEMENT/] [INSTRUCTION]'
+SCRIPT: '[RANGE] [INSTRUCTION] [/PATTERN/] [REPLACEMENT/] [INSTRUCTION]'
 	
+SCRIPT: 'scripts ; scripts' == -e 'scripts' -e 'scripts'
+        -e 'scripts' -f script-file
 
 RANGE
 
@@ -28,23 +28,30 @@ number(s) separated by `,` or `~`.
 2	/* Pick the second line.
 1,3	/* Pick the 1-3 lines.
 1~3	/* Pick the first line and subsequent lines in multiples of 3.
-        /regexp/		/* or even a regex matching.
+
+/regexp		/* or even a regexp matching.
 
 INSTRUCTION
 
 d		/* Delete.
 c TEXT		/* Replace lines with TEXT. 
 i TEXT		/* Insert.
-a addition 	/* Append.
+a TEXT	 	/* Append.
 
 Note: c, i, a instructions are Gnu extension.
- with the first line as the start point.
-/* Substitute the matching.
-s/REGEXP/REPLACEMENT/[FLAGS]
 
 p		/* Print.
 
 q[number]	/* Terminate with a specified exit status number.
+
+/* Substitute the matching, by default only the first.
+s/REGEXP/REPLACEMENT/[FLAGS]
+
+FLAGES:
+
+g		/* Apply to all matches.
+Number		/* Only apply to the Numberth match.
+i		/* Match in case-insensitive.
 
 
 OPTIONS
@@ -61,9 +68,65 @@ OPTIONS
 --in-place[=SUFFIX]	/* Edit files in-place. If provide a suffix, then produces a backfile.
 
 -f SCRIPT-FILE
---file=SCRIPT-FILE
+--file=SCRIPT-FILE	/* read SCRIPT from file.
 
 /* Print the input sed program in canonial form, and show how the comands were processed by it.
 --debug
 
-``` with the first line as the start point.
+``` 
+
+EXAMPLES
+
+
+```
+/* Delete the second imput line.
+$ seq 3 | sed 2d
+1
+3
+
+/* Print the 2nd line.
+$ seq 3 | sed 2p
+1
+2
+2
+3
+
+/* Print only the 2nd line.
+$ seq 3 | sed -n 2p
+2
+
+/* Replace the 2nd line.
+$ seq 3 | sed '2c here!'
+1
+here!
+3
+
+/* Append TEXT after a line.
+$ seq 3 | sed '2a here!'
+1
+2
+here!
+3
+
+/* Different form from above.
+$ seq 3 | sed '2a\
+here!' 
+1
+2
+here!
+3
+
+/* Same as appending but in different way.
+$ seq 3 | sed '2s/2/&\nhere!/'
+1
+2
+here!
+3
+
+Note: match 2nd line; & char means the original. 
+
+/* Same as above, just show another structure.
+$ seq 3 | sed '/2/s/2/&\nhere!/'
+
+
+```
