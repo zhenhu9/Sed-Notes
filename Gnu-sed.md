@@ -1,6 +1,6 @@
 ## GNU SED
 
-Sed is a stream editor. By default, multiple files would be regarded as one stream.
+Sed is a stream editor. By default, multiple files would be regarded as one stream. Data based on lines and matched areas which have been selected by commands, instructions or regular expressions would be called RANGE or ADDRESS. Then they could be manipulated by commands, instructions or regular expressions following RANGE. Those commands, instruction or regular expressions sets could be separated by ';', '\n' or '-e' options. Examing those sets with '--debug' option is a good idea.
 
 ```
 Syntex:
@@ -27,7 +27,9 @@ RANGE
 number(s) separated by `,` or `~`.
 2	/* Pick the second line.
 1,3	/* Pick the 1-3 lines.
-1~3	/* Pick the first line and subsequent lines in multiples of 3.
+1~2	/* Pick the first line and subsequent lines in increment of 2.
+0~2	/* Pick even-numbered lines.
+1~2!	/* Same as above. `!` char means reverse the selection.
 
 /regexp		/* or even a regexp matching.
 
@@ -128,5 +130,12 @@ Note: match 2nd line; & char means the original.
 /* Same as above, just show another structure.
 $ seq 3 | sed '/2/s/2/&\nhere!/'
 
+/* Three different methods, g means substitute all matches in a line.
+$ seq 3 | paste -d, - <(seq 3) | sed -n -e '1s/1/2/p' -e '3s/3/1/gp'
+$ seq 3 | paste -d, - <(seq 3) | sed -n '1s/1/2/p ; 3s/3/1/gp'
+$ seq 3 | paste -d, - <(seq 3) | sed -n '1s/1/2/p\
+3s/3/1/gp'
+2,1
+1,1
 
 ```
