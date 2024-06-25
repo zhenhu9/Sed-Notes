@@ -1,6 +1,6 @@
 ## GNU SED
 
-Sed is a stream editor. By default, multiple files would be regarded as one stream. Data based on lines and matched areas which have been selected by commands, instructions or regular expressions would be called RANGE or ADDRESS. Then they could be manipulated by commands, instructions or regular expressions following RANGE. Those commands, instruction or regular expressions sets could be separated by ';', '\n' or '-e' options.  It's a good idea to examine those sets with '--debug' option.
+Sed is a stream editor. By default, multiple files would be regarded as one stream, unless specify it explicitly by '-s' option to treat them separately. Data based on lines and matched areas which have been selected by commands, instructions or regular expressions would be called RANGE or ADDRESS. Then they could be manipulated by commands, instructions or regular expressions following RANGE. Those commands, instruction or regular expressions sets could be separated by ';', '\n' or '-e' options.  It's a good idea to examine those sets with '--debug' option.
 
 ```
 Syntex:
@@ -21,9 +21,11 @@ SCRIPT: '[RANGE] [INSTRUCTION] [/PATTERN/] [REPLACEMENT/] [INSTRUCTION]'
 	
 SCRIPT: 'scripts ; scripts' == -e 'scripts' -e 'scripts'
         -e 'scripts' -f script-file
+```
 
 RANGE
 
+```
 number(s) separated by `,` or `~`.
 2	/* Pick the second line.
 1,3	/* Pick the 1-3 lines.
@@ -32,9 +34,11 @@ number(s) separated by `,` or `~`.
 1~2!	/* Same as above. `!` char means reversing the selection.
 
 /regexp		/* or even a regexp matching.
+```
 
 INSTRUCTION
 
+```
 d		/* Delete.
 c TEXT		/* Replace lines with TEXT. 
 i TEXT		/* Insert.
@@ -51,13 +55,14 @@ s/REGEXP/REPLACEMENT/[FLAGS]
 
 FLAGES:
 
-g		/* Apply to all matches in a line.
+g		/* Apply to all matches on a line.
 Number		/* Only apply to the Numberth match.
 I		/* Match in case-insensitive.
-
+```
 
 OPTIONS
 
+```
 -n,
 --quiet,
 --silent	/* Only display the processed line(s).
@@ -67,7 +72,7 @@ OPTIONS
 --expression=SCRIPT
 
 -i[SUFFIX]
---in-place[=SUFFIX]	/* Edit files in-place. If provide a suffix, then produces a backfile.
+--in-place[=SUFFIX]	/* Edit files in-place. If provide a suffix, then produces a backup file.
 
 -f SCRIPT-FILE
 --file=SCRIPT-FILE	/* read SCRIPT from file.
@@ -130,7 +135,7 @@ Note: match 2nd line; & char means the original.
 /* Same as above, just show another structure.
 $ seq 3 | sed '/2/s/2/&\nhere!/'
 
-/* Three different methods, g means substitute all matches in a line.
+/* Different methods, g means substitute all matches in a line.
 $ seq 3 | paste -d, - <(seq 3) | sed -n -e '1s/1/2/p' -e '3s/3/1/gp'
 $ seq 3 | paste -d, - <(seq 3) | sed -n '1s/1/2/p ; 3s/3/1/gp'
 $ seq 3 | paste -d, - <(seq 3) | sed -n '1s/1/2/p\
