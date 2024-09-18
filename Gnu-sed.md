@@ -132,7 +132,7 @@ here!
 
 Note: match 2nd line; & char means the original match.
 
-/* Save as above, '.*' means any number of any characters.
+/* Same as above, '.*' means any number of any characters.
 $ seq 3 | sed '2s/.*/&\nhere!/'
 
 
