@@ -130,7 +130,11 @@ $ seq 3 | sed '2s/2/&\nhere!/'
 here!
 3
 
-Note: match 2nd line; & char means the original. 
+Note: match 2nd line; & char means the original match.
+
+/* Save as above, '.*' means any number of any characters.
+$ seq 3 | sed '2s/.*/&\nhere!/'
+
 
 /* Same as above, just show another structure.
 $ seq 3 | sed '/2/s/2/&\nhere!/'
